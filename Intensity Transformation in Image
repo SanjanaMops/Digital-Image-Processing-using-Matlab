@@ -1,0 +1,21 @@
+clc;
+close all;
+clear all;
+subplot(2,3,1);
+im = imread('peppers.png');
+imshow(im);
+title('Original');
+subplot(2,3,2)
+imshow(255-im);
+title('Negative');
+subplot(2,3,3);
+r = double(im)/255;
+c = 5;
+s = c*log(r+1);
+imshow(s);
+title('Logarihmic');
+subplot(2,3,4);
+s1 = c*(r.^2.5);
+imshow(s1);
+title('Exponential');
+saveas(gcf,'MyImg.png');
