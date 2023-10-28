@@ -1,0 +1,24 @@
+subplot(2,2,1);
+image = imread('tomato.jpg');
+imshow(image);
+title('original');
+subplot(2,2,2);
+image2gray = im2gray(image);
+imshow(image2gray);
+title('gray');
+subplot(2,2,3);
+imhist(image2gray);
+title('histogram using imhist')
+subplot(2,2,4);
+H = zeros(1,255)
+for i = 1:480;
+    for j = 1:640;
+        g = image2gray(i,j);
+        H(1,g) = H(1,g) + 1;
+    end 
+end 
+bar(H);
+title('histogram using for loop')
+saveas(gcf,'tomatohistogram.png');
+
+
