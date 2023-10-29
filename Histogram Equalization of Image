@@ -1,0 +1,47 @@
+subplot(2,4,1);
+img = imread('tomato.jpg');
+imshow(img);
+title('Original');
+subplot(2,4,2);
+gray = rgb2gray(img);
+imshow(gray);
+title('Gray');
+subplot(2,4,3);
+hist = imhist(gray);
+imhist(gray);
+title('Histogram');
+subplot(2,4,4);
+[r c] = size(gray);
+pixelProb = imhist(gray)./(r*c);
+plot(0:255,pixelProb);
+xlabel('Gray Levels');
+ylabel('Pixels Probability');
+title('PDF');
+subplot(2,4,5);
+G = 0;
+F = 0;
+for i = 1:256
+    F = pixelProb(i,1);
+    G = F + G;
+    CDF(i,1) = G;
+end 
+bar(CDF);
+xlabel('Gray Levels');
+ylabel('Pixels Probability');
+title('CDF');
+subplot(2,4,6);
+equalizedHist =uint8(CDF.*255);
+bar(equalizedHist);
+xlabel('Gray Levels');
+ylabel('Pixels Probability');
+title('Equalized Histogram');
+subplot(2,4,7);
+equalized_img = uint8(zeros(r,c));
+for i = 1:1:r
+for j = 1:1:c
+equalized_img(i,j) = equalizedHist(img(i,j) + 1);
+end
+end 
+imshow(equalized_img);
+title('Equalized Image');
+saveas(gcf,'HistogramEqualization.jpg');
