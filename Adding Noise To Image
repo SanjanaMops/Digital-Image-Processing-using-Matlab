@@ -1,0 +1,33 @@
+subplot 221;
+cm = imread('cameraman.tif');
+imshow(cm);
+title('Original');
+subplot 222;
+Im123 = double(cm);
+u1 = mean(Im123);
+v1 = var(Im123);
+N1 = Im123 + sqrt(v1).*randn(256) + u1;
+imshow(uint8(N1));
+title('Random Noise');
+subplot 223;
+a = randi(255,256);
+up = 250;
+low = 10;
+cm(a>up) = 255;
+cm(a<low) = 0;
+imshow(cm);
+title('Salt and Pepper Noise');
+subplot 224;
+[r,c] = size(Im123);
+G = randn(r,c);
+for i = 1:r
+    for j = 1:c
+        z = G(i,j);
+        n = 39.84*exp(-(z-4)^2)/0.02;
+        G(i,j) = n;
+    end
+end 
+B = Im123 + G;
+imshow(uint8(B));
+title('Gaussian Noise');
+saveas(gcf, 'NoiseResults.jpg');
