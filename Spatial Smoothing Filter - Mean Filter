@@ -1,0 +1,24 @@
+subplot 221;
+im = imread('cameraman.tif');
+imshow(im);
+title('original');
+subplot 222;
+[h,w] = size(im);
+im2 = zeros(258,258);
+for i = 1:256
+    for j = 1:256
+        im2(i+1,j+1) = im(i,j);
+    end
+end
+imshow(uint8(im2));
+title('Zero Padded Image');
+subplot 223;
+p = im2;
+for x = 2:257
+    for y = 2:257
+        p(x,y) = (p(x-1,y-1)+p(x-1,y)+p(x-1,y+1)+p(x,y-1)+p(x,y)+im2(x,y+1)+p(x+1,y-1)+p(x+1,y)+p(x+1,y+1))/9;
+    end
+end
+imshow(uint8(p));
+title('Mean Filter');
+saveas(gcf,'MeanFilter.jpg');
