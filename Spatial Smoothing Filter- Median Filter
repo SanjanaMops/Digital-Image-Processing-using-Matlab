@@ -1,0 +1,40 @@
+subplot 221;
+im1 = imread('cameraman.tif');
+imshow(im1);
+title('Original');
+subplot 222;
+a = randi(255,256);
+up = 200;
+low = 10;
+im1(a>up) = 255;
+im1(a<low) = 0;
+imshow(im1);
+title('Salt and Pepper Noise');
+subplot 223;
+% Define the mask size
+maskSize = 3;
+% Compute the padding size
+paddingSize = floor(maskSize/2);
+% Pad the input image by replicating the border pixels
+paddedImage = padarray(im1, [paddingSize, paddingSize], 'replicate');
+imshow(paddedImage);
+title('Padded Image');
+subplot 224;
+% Apply the median filter to each pixel in the image
+filteredImage = uint8(zeros(size(im1)));
+for i = 1:size(im1, 1)
+    for j = 1:size(im1, 2)
+        % Extract the neighborhood pixels
+        neighborhood = paddedImage(i:i+maskSize-1, j:j+maskSize-1);
+        % Reshape the neighborhood into a column vector
+        neighborhoodVector = reshape(neighborhood, [], 1);
+        % Compute the median value
+        medianValue = median(neighborhoodVector);
+        % Assign the median value to the middle pixel
+        filteredImage(i, j) = medianValue;
+    end
+end
+% Display the filtered image
+imshow(filteredImage);
+title('Filtered Image');
+saveas(gcf,'MedianFilter.jpg');
