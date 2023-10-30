@@ -1,0 +1,30 @@
+subplot 131
+inputImage = imread('cameraman.tif');
+imshow(inputImage);
+title('Original Image');
+maskSize = 3;
+paddingSize = floor(maskSize/2);
+paddedImage = padarray(inputImage, [paddingSize, paddingSize], 'replicate');
+subplot 132
+minFilteredImage = uint8(zeros(size(inputImage)));
+for i = 1:size(inputImage, 1)
+    for j = 1:size(inputImage, 2)
+        neighborhood = paddedImage(i:i+maskSize-1, j:j+maskSize-1);
+        minValue = min(neighborhood(:));
+        minFilteredImage(i, j) = minValue;
+    end
+end
+imshow(minFilteredImage);
+title('MinFiltered');
+subplot 133
+maxFilteredImage = uint8(zeros(size(inputImage)));
+for i = 1:size(inputImage, 1)
+    for j = 1:size(inputImage, 2)
+        neighborhood = paddedImage(i:i+maskSize-1, j:j+maskSize-1);
+        maxValue = max(neighborhood(:));
+        maxFilteredImage(i, j) = maxValue;
+    end
+end
+imshow(maxFilteredImage);
+title('MaxFiltered');
+saveas(gcf,'MinMaxFilter.jpg');
