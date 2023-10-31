@@ -1,0 +1,66 @@
+subplot 331
+A = imread('cameraman.tif');
+imshow(A);
+title('Original');
+
+subplot 332
+[h,w] = size(A);
+B = zeros(512,512);
+for i = 1:h
+    for j= 1:w
+        B(i+128,j+128) = A(i,j);
+    end
+end 
+imshow(uint8(B))
+title('Zero Padded');
+
+subplot 333
+[u,v] = size(B);
+C = zeros(u,v);
+for m = 1:u
+    for n = 1:v
+        C(m,n) = B(m,n)*((-1)^(m+n));
+    end
+end
+imshow(uint8(C));
+title('Center Transform');
+
+subplot 334;
+F = fft2(C);
+imshow(uint8(F));
+title('DFT');
+%full spectrum visualization 
+subplot 335;
+E = fftshift(F);
+G = (log(1+abs(E)));
+imshow(G,[]);
+title('Full Spectrum');
+
+subplot 336;
+D0 = 100;
+H = zeros(512,512);
+for s = 1:512
+    for t = 1:512
+        D(s,t) = sqrt(((s-256)^2)+((t-256)^2));
+        if D(s,t) < D0
+            H(s,t) = 1;
+        else 
+            H(s,t) = 0;
+        end 
+    end 
+end 
+imshow(uint8(H));
+title('Low Pass Filter');
+
+subplot 337;
+G=H.*F;
+imshow(uint8(G));
+title('Filtered');
+
+subplot 338;
+Z = uint8(real(ifft2(fftshift(G))));
+Z = Z(h/2:3*h/2,w/2:3*w/2);
+imshow(Z);
+title('ILPF');
+
+saveas(gcf,'IdealLowPassFilter.jpg');
