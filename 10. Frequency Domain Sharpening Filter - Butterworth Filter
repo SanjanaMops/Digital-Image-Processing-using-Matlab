@@ -1,0 +1,57 @@
+subplot 331;
+I=imread('cameraman.tif');
+imshow(I);
+title('Original');
+subplot 332;
+[x,y]=size(I);
+p=2*x;q=2*x;
+Pad=zeros(p,q);
+Pad(x/2:x+x/2-1,y/2:y+y/2-1)=I;
+imshow(uint8(Pad));
+title('Padded');
+subplot 333;
+DFT=fftshift(fft2(Pad));
+Spectrum=log(1+abs((dft)));
+imshow(Spectrum,[]);
+title('Spectrum');
+subplot 334;
+H=zeros(p,q);
+do=40;
+n=3;
+for i=1:p
+    for j=1:q
+        d=((i-p/2)^2+(j-q/2)^2)^.5;
+        H(i,j)=1/(1+(d/do)^(2*n));
+    end
+end
+imshow(H,[])
+title('Butterworth LPF');
+subplot 335;
+G=H.*DFT;
+G_pad=uint8(real(ifft2(fftshift(G))));
+G=G_pad(x/2:x+x/2-1,y/2:y+y/2-1);
+imshow(G);
+title('BLPF Filtered Img');
+
+subplot 336;
+H=zeros(p,q);
+do=40;
+n=3;
+for i=1:p
+    for j=1:q
+        d=((i-p/2)^2+(j-q/2)^2)^.5;
+        H(i,j)=1/(1+(d/do)^(2*n));
+    end
+end
+H1 = 1-H;
+imshow(H1,[])
+title('Butterworth HPF');
+
+subplot 337;
+G=H1.*DFT;
+G_pad=uint8(real(ifft2(fftshift(G))));
+G=G_pad(x/2:x+x/2-1,y/2:y+y/2-1);
+imshow(G);
+title('BHPF Filtered Img');
+
+saveas(gcf,'ButterworthFilters.jpg');
