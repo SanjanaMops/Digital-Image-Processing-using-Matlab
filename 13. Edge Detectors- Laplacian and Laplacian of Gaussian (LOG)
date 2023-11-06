@@ -1,7 +1,10 @@
+%read and show original test image
 subplot 211;
 I3 = imread('cameraman.tif');
 imshow(I3);
 title('Original');
+
+%give laplacian mask to convolve with the original test image to find laplacian detected edge image
 H = [[0,-1,0];[-1,4,-1];[0,-1,0]];
 G = conv2(I3,H,'same');
 subplot 212;
@@ -9,15 +12,18 @@ imshow(uint8(G));
 title('Laplacian Edge Detection');
 saveas(gcf,'LaplacianED.jpg');
 
+%read and show original test image
 subplot 221;
 I3 = imread('cameraman.tif');
 imshow(I3);
 title('Original');
+%take gaussian mask H by weighted average
 H = [[1,2,1];[2,4,2];[1,2,1]]/16;
 G = conv2(I3,H,'same');
 subplot 222;
 imshow(uint8(G));
 title('Gaussian');
+%apply laplacian mask to gaussian to find LOG
 subplot 223;
 H1 = [[0,-1,0];[-1,4,-1];[0,-1,0]];
 G1 = conv2(G,H1,'same');
