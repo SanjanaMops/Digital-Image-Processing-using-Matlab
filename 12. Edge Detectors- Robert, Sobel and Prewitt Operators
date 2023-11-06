@@ -1,7 +1,9 @@
+%read and show original test image
 subplot 221;
 I = imread('cameraman.tif');
 imshow(I);
 title('Original');
+%give hx and hy, robert operator masks in x and y directions respectively, convolve with test image
 hx = [[1,0];[0,-1]];
 hy = [[0,1];[-1,0]];
 Gx = conv2(I,hx,'same');
@@ -12,12 +14,14 @@ title('Gx');
 subplot 223;
 imshow(uint8(Gy));
 title('Gy');
+%find the magnitude
 final = sqrt((Gx).^2 + (Gy).^2);
 subplot 224;
 imshow(uint8(final));
 title('Robert Operator Edge Detection');
 saveas(gcf,'RobertOP.jpg');
 
+%similarily
 subplot 221;
 I1 = imread('cameraman.tif');
 imshow(I1);
