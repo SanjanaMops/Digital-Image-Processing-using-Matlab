@@ -1,7 +1,9 @@
+%read and show test image
 subplot 221;
 I=imread('cameraman.tif');
 imshow(I);
 title('Original');
+%zero pad image
 [h,w]=size(I);
 subplot 222;
 B=zeros(258,258);
@@ -10,6 +12,8 @@ for i = 1:h
         B(i+1,j+1)=I(i,j);
    end
 end
+
+%apply lapacian filter
 L=zeros(h,w);
 [u,v]=size(B);
 subplot 223;
