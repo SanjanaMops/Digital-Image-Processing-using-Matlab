@@ -1,0 +1,128 @@
+subplot 331;
+I1 = imread('cameraman.tif');
+imshow(I1);
+title('Original');
+H = [[1,2,1];[2,4,2];[1,2,1]]/16;
+G = conv2(I1,H,'same');
+
+subplot 332;
+imshow(uint8(G));
+title('Gaussian');
+hx1 = [[1,2,1];[0,0,0];[-1,-2,-1]];
+hy1 = [[1,0,-1];[2,0,-2];[1,0,-1]];
+Gx1 = conv2(G,hx1,'same');
+Gy1 = conv2(G,hy1,'same');
+
+subplot 333;
+imshow(Gx1);
+title('Gx');
+subplot 334;
+imshow(Gy1);
+title('Gy');
+Mag = sqrt((Gx1).^2 + (Gy1).^2);
+
+subplot 335;
+imshow(uint8(Mag));
+title('Magnitude');
+
+subplot 336;
+Angle = atan2(Gy1,Gx1);
+imshow(Angle);
+title('Angle');
+
+subplot 337;
+a = (Angle*180)/3.14;
+
+[h,w] = size(a);
+ 
+for i = 1:h
+    for j = 1:w
+        if (a(i,j)>=0 && a(i,j)<=22.5) || (a(i,j)>=157.5 && a(i,j)<202.5) || (a(i,j)>= 337.5 && a(i,j)<=360)
+            a(i,j) = 0;
+        elseif (a(i,j)>=22.5 && a(i,j)<=67.5) || (a(i,j)>=202.5 && a(i,j)< 247.5)
+            a(i,j) = 45;
+        elseif (a(i,j) >= 67.5 && a(i,j)<117.5) || (a(i,j)>=247.5 && a(i,j)<292.5)
+            a(i,j) = 90;
+        elseif (a(i,j)>=112.5 && a(i,j)<157.5) || (a(i,j)>=292.5 && a(i,j)<337.5)
+            a(i,j) = 135;
+        end
+    end
+end
+
+for i = 1:h
+    for j = 1:w
+        if a(i,j) < 0
+            a(i,j)= a(i,j) + 360;
+        end
+    end
+end
+           
+imshow(a);      
+title('Angle in degrees');
+
+[~,w] = size(a);
+a1 = zeros(258,258);
+for i = 1:256
+    for j = 1:256
+        a1(i+1,j+1) = a(i,j);
+    end
+end
+
+[h,w] = size(Mag);
+Mag1 = zeros(258,258);
+for i = 1:256
+    for j = 1:256
+        Mag1(i+1,j+1) = Mag(i,j);
+    end
+end
+
+[m,n] = size(a1);
+
+for i = 1:m
+    for j = 1:n
+       
+        if a1(i,j) == 0
+            if Mag1(i-1,j) > Mag1(i,j) || Mag1(i+1,j) > Mag1(i,j)
+                Mag1(i,j) = 0;
+            else
+                Mag1(i,j) = Mag1(i,j);
+            end
+        end
+       
+       if a1(i,j) == 45
+           if Mag1(i-1,j+1) > Mag1(i,j) || Mag1(i+1,j-1) > Mag1(i,j)
+                Mag1(i,j) = 0;
+            else
+                Mag1(i,j) = Mag1(i,j);
+            end
+       end
+       
+       if a1(i,j) == 90
+           if Mag1(i,j-1) > Mag1(i,j) || Mag1(i,j+1) > Mag1(i,j)
+                Mag1(i,j) = 0;
+            else
+                Mag1(i,j) = Mag1(i,j);
+            end
+       end
+       
+       if a1(i,j) == 135
+           if Mag1(i-1,j-1) > Mag1(i,j) || Mag1(i+1,j+1) > Mag1(i,j)
+                Mag1(i,j) = 0;
+            else
+                Mag1(i,j) = Mag1(i,j);
+            end
+        end
+       
+       if a1(i,j) == 180
+            if Mag1(i-1,j) > Mag1(i,j) || Mag1(i+1,j) > Mag1(i,j)
+                Mag1(i,j) = 0;
+            else
+                Mag1(i,j) = Mag1(i,j);
+            end
+       end  
+       
+    end
+end
+
+subplot 338;
+imshow(Mag1);
