@@ -1,18 +1,23 @@
+%read and show test image
 subplot 331;
 I1 = imread('cameraman.tif');
 imshow(I1);
 title('Original');
-H = [[1,2,1];[2,4,2];[1,2,1]]/16;
-G = conv2(I1,H,'same');
 
+%perform gaussian smoothing by taking H as per weighted average
+H = [[1,2,1];[2,4,2];[1,2,1]]/16;
+G = conv2(I1,H,'same'); %same is used to keep G size same as I1
 subplot 332;
 imshow(uint8(G));
 title('Gaussian Smoothing');
+
+%perform derivative using Sobel operator
 hx1 = [[1,2,1];[0,0,0];[-1,-2,-1]];
 hy1 = [[1,0,-1];[2,0,-2];[1,0,-1]];
-Gx1 = conv2(G,hx1,'same');
+Gx1 = conv2(G,hx1,'same'); %same is used to keep Gx1 size same as G
 Gy1 = conv2(G,hy1,'same');
 
+%find and show the derivative magnitude
 subplot 333;
 imshow(Gx1);
 title('Gx');
@@ -25,14 +30,17 @@ subplot 335;
 imshow(uint8(Mag));
 title('Derivative Magnitude');
 
+%find the derivative angle
 subplot 336;
 Angle = atan2(Gy1,Gx1);
 imshow(Angle);
 title('Gradient Angle');
 
+%angle in degrees
 subplot 337;
 a = (Angle*180)/3.14;
 
+%give conditions to modify the angle matrix
 [h,w] = size(a);
  
 for i = 1:h
@@ -60,6 +68,7 @@ end
 imshow(a);       
 title('Angle in degrees');
 
+%zero pad the angle and magnitude matrices for further operations
 [h,w] = size(a);
 a1 = zeros(258,258);
 for i = 1:h
@@ -76,6 +85,7 @@ for i = 1:h
     end
 end
 
+%non maximum supression
 [m,n] = size(a1);
 
 for i = 2:257
@@ -128,6 +138,7 @@ subplot 338;
 imshow(uint8(Mag1));
 title('Non Maximum Supression');
 
+%hysteresis thresholding
 subplot 339;
 
 Med = median(I1);
