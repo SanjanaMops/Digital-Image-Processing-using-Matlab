@@ -1,0 +1,16 @@
+img = imread('cameraman.tif'); 
+[LL, LH, HL, HH] = dwt2(img, 'haar');
+figure;
+subplot 221;
+imshow(LL, []);
+title('Approximation (LL)');
+subplot 222;
+imshow(LH, []);
+title('Horizontal Detail (LH)');
+subplot 223;
+imshow(HL, []);
+title('Vertical Detail (HL)');
+subplot 224;
+imshow(HH, []);
+title('Diagonal Detail (HH)');
+saveas(gcf,'DWT1.jpg');
