@@ -13,51 +13,6 @@ end
 imshow(I1);
 title('Zero Padded Image');
 
-a = randi(255,256);
-up = 250;
-low = 10;
-I1(a>up) = 255;
-I1(a<low) = 0;
-
-subplot 333;
-
-se = ones(3,3);
-Cmin = zeros(size(I1)); %initialize Cmin
-Cmax = zeros(size(I1));
-
-[r,c] = size(I1);
-for i = 2:r-1
-    for j = 2:c-1
-        window = I1(i-1:i+1,j-1:j+1);
-       
-        C = window.*se;
-        Cmin(i-1,j-1) = min(C(:));
-        Cmax(i-1,j-1) = max(C(:));
-    end
-end
-
-imshow(Cmin);
-title('Eroded Image');
-
-subplot 334;
-imshow(Cmax);
-title('Dilated Image');
-
-subplot 331;
-I = imread('text.png');
-imshow(I);
-title('original image');
-subplot 332;
-[h,w] = size(I);
-I1 = zeros(258,258);
-for i = 1:h
-    for j = 1:w
-        I1(i+1,j+1) = I(i,j);
-    end
-end
-imshow(I1);
-title('Zero Padded Image');
-
 subplot 333;
 
 se = ones(3,3);
