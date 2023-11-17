@@ -26,7 +26,7 @@ for i = 2:r-1
        
         C = se.*window;
         Cmin(i,j) = min(C(:));
-        Cmax(i-1,j-1) = max(Cmin(:));
+        Cmax(i-1,j-1) = max(max(se.*Cmin(i,j)));
     end
 end
 
@@ -40,9 +40,10 @@ for i = 2:r-1
        
         C = se.*window;
         Cmax(i,j) = max(C(:));
-        Cmin(i-1,j-1) = min(Cmax(:));
+        Cmin(i-1,j-1) = min(min(se.*Cmax(i,j)));
     end
 end
 
 imshow(Cmin);
 title('Closing');
+saveas(gcf,'OpeningClosing.jpg');
